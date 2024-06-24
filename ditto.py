@@ -9,3 +9,5 @@ dados_json = json.dumps(dados, indent=4)
 with open('/home/navarro/lakehouse/ditto.json', 'w') as arquivo:
     arquivo.write(dados_json)
     print('Pegamos as informações do Ditto!')
+
+# teste
