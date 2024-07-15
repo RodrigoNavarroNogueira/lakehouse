@@ -33,12 +33,16 @@ RUN /etc/init.d/ssh start
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 RUN cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 RUN chmod 0600 ~/.ssh/authorized_keys
-RUN hdfs namenode -format
-ENV HDFS_NAMENODE_USER=root
-ENV HDFS_DATANODE_USER=root
-ENV HDFS_SECONDARYNAMENODE_USER=root
+RUN echo '/etc/init.d/ssh start' >> ~/.bashrc
+RUN bash -c "source ~/.bashrc"
 
-RUN sed -i "s/if \[\[ -e '\/usr\/bin\/pdsh' \]\]; then/if \[\[ ! -e '\/usr\/bin\/pdsh' \]\]; then/" $HADOOP_HOME/libexec/hadoop-functions.sh
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-#RUN start-dfs.sh
-#RUN bin/hdfs dfs -mkdir -p input
+RUN useradd -m -s /bin/bash bilbo
+RUN echo "bilbo:insecure_password" | chpasswd
+
+EXPOSE 22
+
+ENTRYPOINT service ssh start && bash
+
+RUN ssh
