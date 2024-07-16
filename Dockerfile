@@ -18,14 +18,18 @@ RUN mv hadoop-3.4.0 /usr/local/hadoop
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV HADOOP_HOME=/usr/local/hadoop
 ENV SPARK_HOME=/opt/spark
-ENV HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
-ENV PATH=$SPARK_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+ENV HADOOP_CONFIG_DIR=$HADOOP_HOME/etc/hadoop
+ENV PATH=/usr/local/hadoop/bin:/usr/local/hadoop/sbin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+ENV HDFS_NAMENODE_USER=root
+ENV HDFS_DATANODE_USER=root
+ENV HDFS_SECONDARYNAMENODE_USER=root
 
 COPY ditto.json /
 COPY core-site.xml $HADOOP_CONFIG_DIR/core-site.xml
 COPY hdfs-site.xml $HADOOP_CONFIG_DIR/hdfs-site.xml
 COPY mapred-site.xml $HADOOP_CONFIG_DIR/mapred-site.xml
 COPY yarn-site.xml $HADOOP_CONFIG_DIR/yarn-site.xml
+COPY hadoop-functions.sh $HADOOP_HOME/libexec/hadoop-functions.sh
 
 RUN echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64' >> $HADOOP_CONF_DIR/hadoop-env.sh
 
@@ -34,15 +38,7 @@ RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 RUN cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
 RUN chmod 0600 ~/.ssh/authorized_keys
 RUN echo '/etc/init.d/ssh start' >> ~/.bashrc
-RUN bash -c "source ~/.bashrc"
+RUN echo export JAVA_HOME=${JAVA_HOME} >> $HADOOP_CONFIG_DIR/hadoop-env.sh
 
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-
-RUN useradd -m -s /bin/bash bilbo
-RUN echo "bilbo:insecure_password" | chpasswd
-
-EXPOSE 22
-
-ENTRYPOINT service ssh start && bash
-
-RUN ssh
+RUN hdfs namenode -format
+RUN echo 'start-dfs.sh' >> ~/.bashrc
