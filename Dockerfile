@@ -15,6 +15,10 @@ RUN wget https://dlcdn.apache.org/hadoop/common/hadoop-3.4.0/hadoop-3.4.0.tar.gz
 RUN tar xvf hadoop-3.4.0.tar.gz
 RUN mv hadoop-3.4.0 /usr/local/hadoop
 
+RUN wget https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
+RUN tar xvf spark-3.5.1-bin-hadoop3.tgz
+RUN mv spark-3.5.1-bin-hadoop3 /opt/spark
+
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV HADOOP_HOME=/usr/local/hadoop
 ENV SPARK_HOME=/opt/spark
@@ -45,5 +49,6 @@ RUN echo export JAVA_HOME=${JAVA_HOME} >> $HADOOP_CONFIG_DIR/hadoop-env.sh
 RUN hdfs namenode -format
 RUN echo 'start-dfs.sh' >> ~/.bashrc
 RUN echo 'start-yarn.sh' >> ~/.bashrc
+
 RUN echo 'hdfs dfs -mkdir -p pokemon' >> ~/.bashrc
 RUN echo 'hdfs dfs -put /ditto.json pokemon' >> ~/.bashrc
