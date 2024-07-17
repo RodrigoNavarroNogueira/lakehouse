@@ -19,11 +19,15 @@ RUN wget https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz
 RUN tar xvf spark-3.5.1-bin-hadoop3.tgz
 RUN mv spark-3.5.1-bin-hadoop3 /opt/spark
 
+RUN wget https://dlcdn.apache.org/hive/hive-4.0.0/apache-hive-4.0.0-bin.tar.gz
+RUN tar -xzvf apache-hive-4.0.0-bin.tar.gz
+
 ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
 ENV HADOOP_HOME=/usr/local/hadoop
 ENV SPARK_HOME=/opt/spark
+ENV HIVE_HOME=/apache-hive-4.0.0-bin
 ENV HADOOP_CONFIG_DIR=$HADOOP_HOME/etc/hadoop
-ENV PATH=/usr/local/hadoop/bin:/usr/local/hadoop/sbin:$SPARK_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+ENV PATH=/usr/local/hadoop/bin:/usr/local/hadoop/sbin:$SPARK_HOME/bin:$HIVE_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
 ENV HDFS_NAMENODE_USER=root
 ENV HDFS_DATANODE_USER=root
 ENV HDFS_SECONDARYNAMENODE_USER=root
@@ -52,3 +56,9 @@ RUN echo 'start-yarn.sh' >> ~/.bashrc
 
 RUN echo 'hdfs dfs -mkdir -p pokemon' >> ~/.bashrc
 RUN echo 'hdfs dfs -put /ditto.json pokemon' >> ~/.bashrc
+
+RUN echo 'hadoop fs -mkdir /tmp' >> ~/.bashrc
+RUN echo 'hadoop fs -mkdir /user/hive' >> ~/.bashrc
+RUN echo 'hadoop fs -mkdir /user/hive/warehouse' >> ~/.bashrc
+RUN echo 'hadoop fs -chmod g+w /tmp' >> ~/.bashrc
+RUN echo 'hadoop fs -chmod g+w /user/hive/warehouse' >> ~/.bashrc
