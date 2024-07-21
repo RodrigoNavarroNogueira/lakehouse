@@ -34,7 +34,7 @@ ENV HDFS_SECONDARYNAMENODE_USER=root
 ENV YARN_RESOURCEMANAGER_USER=root
 ENV YARN_NODEMANAGER_USER=root
 
-COPY ditto.json /
+COPY pokemon.json /
 COPY core-site.xml $HADOOP_CONFIG_DIR/core-site.xml
 COPY hdfs-site.xml $HADOOP_CONFIG_DIR/hdfs-site.xml
 COPY mapred-site.xml $HADOOP_CONFIG_DIR/mapred-site.xml
@@ -55,10 +55,17 @@ RUN echo 'start-dfs.sh' >> ~/.bashrc
 RUN echo 'start-yarn.sh' >> ~/.bashrc
 
 RUN echo 'hdfs dfs -mkdir -p pokemon' >> ~/.bashrc
-RUN echo 'hdfs dfs -put /ditto.json pokemon' >> ~/.bashrc
+RUN echo 'hdfs dfs -put /pokemon.json pokemon' >> ~/.bashrc
 
 RUN echo 'hadoop fs -mkdir /tmp' >> ~/.bashrc
 RUN echo 'hadoop fs -mkdir /user/hive' >> ~/.bashrc
 RUN echo 'hadoop fs -mkdir /user/hive/warehouse' >> ~/.bashrc
 RUN echo 'hadoop fs -chmod g+w /tmp' >> ~/.bashrc
 RUN echo 'hadoop fs -chmod g+w /user/hive/warehouse' >> ~/.bashrc
+COPY hive-site.xml $HIVE_HOME/conf
+# schematool -dbType derby -initSchema
+# $HIVE_HOME/bin/beeline -u jdbc:hive2://
+# CREATE DATABASE bronze;
+# USE bronze;
+# hive
+# show databases;
