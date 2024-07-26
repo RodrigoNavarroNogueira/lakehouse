@@ -23,6 +23,8 @@ ENV PATH=/usr/local/hadoop/bin:/usr/local/hadoop/sbin:$SPARK_HOME/bin:$HADOOP_HO
 ENV HDFS_NAMENODE_USER=root
 ENV HDFS_DATANODE_USER=root
 ENV HDFS_SECONDARYNAMENODE_USER=root
+ENV YARN_RESOURCEMANAGER_USER=root
+ENV YARN_NODEMANAGER_USER=root
 
 COPY ditto.json /
 COPY core-site.xml $HADOOP_CONFIG_DIR/core-site.xml
@@ -42,3 +44,6 @@ RUN echo export JAVA_HOME=${JAVA_HOME} >> $HADOOP_CONFIG_DIR/hadoop-env.sh
 
 RUN hdfs namenode -format
 RUN echo 'start-dfs.sh' >> ~/.bashrc
+RUN echo 'start-yarn.sh' >> ~/.bashrc
+RUN echo 'hdfs dfs -mkdir -p pokemon' >> ~/.bashrc
+RUN echo 'hdfs dfs -put /ditto.json pokemon' >> ~/.bashrc
