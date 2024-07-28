@@ -13,4 +13,5 @@ STORED AS TEXTFILE;
 LOAD DATA INPATH '/user/root/pokemon/pokemon_edit.json' INTO TABLE pokemon;
 
 
-SELECT * FROM pokemon;
+SELECT * FROM pokemon
+LIMIT 10;
