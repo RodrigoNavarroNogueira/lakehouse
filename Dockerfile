@@ -50,6 +50,7 @@ COPY yarn-site.xml $HADOOP_CONFIG_DIR/yarn-site.xml
 COPY hadoop-functions.sh $HADOOP_HOME/libexec/hadoop-functions.sh
 COPY hive-site.xml /opt/hive/conf/
 COPY testando.py /opt/spark/workspace/
+COPY spark-defaults.conf $SPARK_HOME/conf/
 
 RUN /etc/init.d/ssh start
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
@@ -73,5 +74,3 @@ RUN echo 'hdfs dfs -chmod g+w /tmp' >> ~/.bashrc
 RUN echo 'hdfs dfs -chmod g+w /user/hive/warehouse' >> ~/.bashrc
 
 RUN echo 'schematool -dbType derby -initSchema' >> ~/.bashrc
-#RUN echo 'beeline -u jdbc:hive2://localhost:10000 -f /files/init.hql' >> ~/.bashrc
-#RUN echo '$HIVE_HOME/bin/beeline -u jdbc:hive2:// -f /files/init.hql' >> ~/.bashrc
